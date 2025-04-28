@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cost Calculator (Exclude VAT)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f9f9f9;
+    }
+    .calculator {
+      background: white;
+      padding: 2rem;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div class="calculator">
+  <h2>Cost Calculator (Exclude VAT)</h2>
+  <label for="gp">GP (%)</label>
+  <input type="number" id="gp" placeholder="Enter GP %">
+
+  <label for="retail">Retail Price (Include VAT)</label>
+  <input type="number" id="retail" placeholder="Enter Retail Price">
+
+  <button onclick="calculateCost()">Calculate Cost</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+function calculateCost() {
+  const gp = parseFloat(document.getElementById('gp').value);
+  const retailPrice = parseFloat(document.getElementById('retail').value);
+
+  if (isNaN(gp) || isNaN(retailPrice)) {
+    document.getElementById('result').innerText = "Please enter valid numbers.";
+    return;
+  }
+
+  const retailExVat = retailPrice / 1.07; // Remove 7% VAT
+  const cost = retailExVat * (1 - (gp / 100));
+
+  document.getElementById('result').innerText = `Cost (Exclude VAT): ${cost.toFixed(2)} บาท`;
+}
+</script>
+
+</body>
+</html>
