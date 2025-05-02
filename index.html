@@ -42,6 +42,8 @@
 
 <div class="calculator">
   <h2>Cost Calculator (Exclude VAT)</h2>
+  
+  <!-- คำนวณต้นทุนจาก GP และราคาขาย -->
   <label for="gp">GP (%)</label>
   <input type="number" id="gp" placeholder="Enter GP %">
 
@@ -49,8 +51,22 @@
   <input type="number" id="retail" placeholder="Enter Retail Price">
 
   <button onclick="calculateCost()">Calculate Cost</button>
-
+  
   <div class="result" id="result"></div>
+
+  <hr>
+
+  <!-- คำนวณ GP จากต้นทุนและราคาขาย -->
+  <h2>GP Calculator (From Cost and Retail Price)</h2>
+  <label for="cost">Cost (Exclude VAT)</label>
+  <input type="number" id="cost" placeholder="Enter Cost">
+
+  <label for="retailGpCalc">Retail Price (Include VAT)</label>
+  <input type="number" id="retailGpCalc" placeholder="Enter Retail Price">
+
+  <button onclick="calculateGP()">Calculate GP</button>
+  
+  <div class="result" id="gpResult"></div>
 </div>
 
 <script>
@@ -67,6 +83,21 @@ function calculateCost() {
   const cost = retailExVat * (1 - (gp / 100));
 
   document.getElementById('result').innerText = `Cost (Exclude VAT): ${cost.toFixed(2)} บาท`;
+}
+
+function calculateGP() {
+  const cost = parseFloat(document.getElementById('cost').value);
+  const retailPrice = parseFloat(document.getElementById('retailGpCalc').value);
+
+  if (isNaN(cost) || isNaN(retailPrice)) {
+    document.getElementById('gpResult').innerText = "Please enter valid numbers.";
+    return;
+  }
+
+  const retailExVat = retailPrice / 1.07; // Remove 7% VAT
+  const gp = ((retailExVat - cost) / retailExVat) * 100;
+
+  document.getElementById('gpResult').innerText = `GP (Exclude VAT): ${gp.toFixed(2)}%`;
 }
 </script>
 
