@@ -67,6 +67,27 @@
   <button onclick="calculateGP()">Calculate GP</button>
   
   <div class="result" id="gpResult"></div>
+
+<hr>
+
+<h2>Shelf Life Qualification</h2>
+
+<label for="mfgDate">Manufacturing Date</label>
+<input type="date" id="mfgDate">
+
+<label for="expDate">Expiry Date</label>
+<input type="date" id="expDate">
+
+<label for="deliveryDate">Delivery Date</label>
+<input type="date" id="deliveryDate">
+
+<label for="minShelfLifePercent">Minimum Required Shelf Life (%)</label>
+<input type="number" id="minShelfLifePercent" placeholder="e.g. 75">
+
+<button onclick="checkShelfLife()">Check Shelf Life</button>
+
+<div class="result" id="shelfLifeResult"></div>
+
 </div>
 
 <script>
@@ -99,6 +120,35 @@ function calculateGP() {
 
   document.getElementById('gpResult').innerText = `GP (Exclude VAT): ${gp.toFixed(2)}%`;
 }
+function checkShelfLife() {
+  const mfgDate = new Date(document.getElementById('mfgDate').value);
+  const expDate = new Date(document.getElementById('expDate').value);
+  const deliveryDate = new Date(document.getElementById('deliveryDate').value);
+  const minRequiredPercent = parseFloat(document.getElementById('minShelfLifePercent').value);
+
+  const resultDiv = document.getElementById('shelfLifeResult');
+
+  if (isNaN(mfgDate) || isNaN(expDate) || isNaN(deliveryDate) || isNaN(minRequiredPercent)) {
+    resultDiv.innerText = "Please fill in all fields correctly.";
+    return;
+  }
+
+  const totalShelfLifeDays = (expDate - mfgDate) / (1000 * 60 * 60 * 24);
+  const remainingShelfLifeDays = (expDate - deliveryDate) / (1000 * 60 * 60 * 24);
+  const remainingPercent = (remainingShelfLifeDays / totalShelfLifeDays) * 100;
+
+  const isQualified = remainingPercent >= minRequiredPercent;
+
+  resultDiv.innerHTML = `
+    Total Shelf Life: ${totalShelfLifeDays.toFixed(0)} days<br>
+    Remaining Shelf Life: ${remainingShelfLifeDays.toFixed(0)} days<br>
+    Remaining Shelf Life: ${remainingPercent.toFixed(2)}%<br>
+    Result: <span style="color:${isQualified ? 'green' : 'red'}; font-weight:bold;">
+      ${isQualified ? 'PASS' : 'FAIL'}
+    </span>
+  `;
+}
+
 </script>
 
 </body>
